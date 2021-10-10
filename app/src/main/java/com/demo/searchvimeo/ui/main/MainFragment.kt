@@ -14,6 +14,10 @@ import com.demo.searchvimeo.MainViewModel
 import com.demo.searchvimeo.databinding.MainFragmentBinding
 import com.demo.searchvimeo.viewmodel.SearchFragmentViewModel
 import javax.inject.Inject
+import android.content.Intent
+import android.net.Uri
+import com.demo.searchvimeo.di.RepositoryModule.BASEURL
+
 
 class MainFragment : Fragment() {
 
@@ -31,6 +35,7 @@ class MainFragment : Fragment() {
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private val viewModel: SearchFragmentViewModel by viewModels { viewModelFactory }
+
     // share data or
     private val mainViewModel: MainViewModel by activityViewModels()
 
@@ -44,6 +49,14 @@ class MainFragment : Fragment() {
             binding = this
             searchResultRender.init(binding.recyclerView) {
                 Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+                try {
+                    val uri: Uri = Uri.parse("$BASEURL$it")
+                    val intent = Intent(Intent.ACTION_VIEW, uri)
+                    startActivity(intent)
+                } catch (e: Exception) {
+                    Toast.makeText(requireContext(), " Please Install browser", Toast.LENGTH_SHORT)
+                        .show()
+                }
             }
             searchBarRender.init(binding.searchBar) {
                 viewModel.query(it)

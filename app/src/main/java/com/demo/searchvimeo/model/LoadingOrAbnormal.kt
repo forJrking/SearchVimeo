@@ -10,3 +10,5 @@ object Error
 object Loading
 
 object Empty
+
+data class SearchResult(val imgUrl: String, val videoUrl: String)

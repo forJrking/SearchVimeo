@@ -1,6 +1,5 @@
 package com.demo.searchvimeo.model
 
-import android.util.Log
 import com.demo.searchvimeo.repo.Result
 import java.util.regex.Pattern
 import javax.inject.Inject
@@ -37,26 +36,28 @@ class ModelReducer @Inject constructor() {
     companion object {
 
         private const val rowReg =
-            "<a class=\"item_thumb\" href=\".*?\">\\s+<img src=\".*?\">\\s+<span.*?</a>"
-        private const val regImg = "srcset=\"http.*?\\s3x\""
+            "<a class=\"item_thumb\" href=\"(.*?)\">\\s+<img src=\".*?\">\\s+<span.*?</a>"
+        private const val regImg = ".* srcset=\"(.*?) 2x, (.*?) 3x\".*"
+
     }
 
-    private fun matchList(data: String): List<String> = mutableListOf<String>().apply {
+    private fun matchList(data: String) = mutableListOf<SearchResult>().apply {
         val matcher = Pattern.compile(rowReg).matcher(data.trim())
         try {
             while (matcher.find()) {
                 val group = matcher.group()
-                Log.d("matcher", group)
-                val matcherSrc = Pattern.compile(regImg).matcher(group)
-                while (matcherSrc.find()) {
-                    val group1 = matcherSrc.group()
-                    val imgUrl = group1.replace("srcset=\"", "")
-                        .replace("\"", "")
-                        .replace(" 2x", "")
-                        .replace(" 3x", "")
-                        .split(",")[0]
-                    Log.d("matcher1", imgUrl)
-                    this.add(imgUrl)
+                val videoUrl = matcher.group(1)
+                println("url: $videoUrl")
+                val srcSetPattern = Pattern.compile(regImg)
+                val serSetMatcher = srcSetPattern.matcher(group)
+                while (serSetMatcher.find()) {
+                    println("2x: ${serSetMatcher.group(1)}")
+                    val imgUrl = serSetMatcher.group(2)
+                    println("3x: $imgUrl")
+                    this.add(SearchResult(
+                        imgUrl = imgUrl,
+                        videoUrl = videoUrl
+                    ))
                 }
             }
         } catch (e: Exception) {

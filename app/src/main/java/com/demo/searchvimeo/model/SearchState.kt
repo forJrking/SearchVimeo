@@ -9,7 +9,7 @@ import java.lang.Exception
  */
 sealed class SearchState {
     object Loading : SearchState()
-    data class Data(val result: List<String>) : SearchState()
+    data class Data(val result: List<SearchResult>) : SearchState()
     object Empty : SearchState()
     data class Error(val exception: Exception) : SearchState()
 }

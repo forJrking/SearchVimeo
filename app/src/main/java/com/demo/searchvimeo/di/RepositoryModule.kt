@@ -23,6 +23,8 @@ import java.util.concurrent.TimeUnit
 @Module
 object RepositoryModule {
 
+    const val BASEURL = "https://vimeo.com"
+
     @Provides
     fun providesDispatcher(): CoroutineDispatcher = Dispatchers.IO
 
@@ -31,7 +33,7 @@ object RepositoryModule {
     fun providesRepository(okHttpClient: OkHttpClient): SearchVideoApi =
         Retrofit.Builder()
 //            .addConverterFactory(GsonConverterFactory.create())
-            .baseUrl("https://vimeo.com")
+            .baseUrl(BASEURL)
             .client(okHttpClient)
             .build().create(SearchVideoApi::class.java)
 

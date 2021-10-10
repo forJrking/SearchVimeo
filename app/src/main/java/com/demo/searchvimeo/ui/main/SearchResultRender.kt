@@ -5,10 +5,7 @@ import android.widget.ImageView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.demo.searchvimeo.R
-import com.demo.searchvimeo.model.Empty
-import com.demo.searchvimeo.model.Error
-import com.demo.searchvimeo.model.Loading
-import com.demo.searchvimeo.model.SearchState
+import com.demo.searchvimeo.model.*
 import com.demo.searchvimeo.ui.recyclerview.*
 import com.github.forjrking.image.load
 import javax.inject.Inject
@@ -29,14 +26,16 @@ class SearchResultRender @Inject constructor() {
             withLayoutManager { LinearLayoutManager(context) }
             adapter {
                 addItem(R.layout.layout_video_item) {
-                    isForViewType { data, _ -> data is String }
+                    isForViewType { data, _ -> data is SearchResult }
                     bindViewHolder { data, pos, _ ->
                         val imageView = findViewById<ImageView>(R.id.img)
-                        imageView.load(data as? String) {
-                            placeHolderResId = R.drawable.ic_baseline_image_24
-                        }
-                        clicked(R.id.img) {
-                            onItemClick.invoke("$pos")
+                        (data as? SearchResult)?.let { dataSource ->
+                            imageView.load(dataSource.imgUrl) {
+                                placeHolderResId = R.drawable.ic_baseline_image_24
+                            }
+                            clicked(R.id.img) {
+                                onItemClick.invoke(dataSource.videoUrl)
+                            }
                         }
                     }
                 }
