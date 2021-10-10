@@ -1,6 +1,9 @@
 package com.demo.searchvimeo.repo
 
+import okhttp3.ResponseBody
+import retrofit2.Response
 import retrofit2.http.GET
+import retrofit2.http.Query
 
 /**
  * @description:
@@ -9,7 +12,7 @@ import retrofit2.http.GET
  */
 interface SearchVideoApi {
 
-    @GET("search?q={searchTxt}")
-    suspend fun fetchSearchVimeoResult(searchTxt: String): String
+    @GET("search?q=")
+    suspend fun fetchSearchVimeoResult(@Query("searchTxt") searchTxt: String): ResponseBody
 
 }

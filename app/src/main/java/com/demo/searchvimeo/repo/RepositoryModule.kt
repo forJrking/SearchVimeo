@@ -28,7 +28,7 @@ object RepositoryModule {
     @Singleton
     fun providesRepository(okHttpClient: OkHttpClient): SearchVideoApi =
         Retrofit.Builder()
-            .addConverterFactory(GsonConverterFactory.create())
+//            .addConverterFactory(GsonConverterFactory.create())
             .baseUrl("https://vimeo.com")
             .client(okHttpClient)
             .build().let {
@@ -37,7 +37,7 @@ object RepositoryModule {
 
     @Provides
     fun createOkhttpClient() = OkHttpClient.Builder()
-        .addInterceptor(HttpLoggingInterceptor())
+        .addInterceptor(HttpLoggingInterceptor().apply { setLevel(HttpLoggingInterceptor.Level.BODY) })
         .writeTimeout(15, TimeUnit.SECONDS)
         .readTimeout(15, TimeUnit.SECONDS)
         .readTimeout(10, TimeUnit.SECONDS)
