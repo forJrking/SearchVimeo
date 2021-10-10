@@ -19,6 +19,7 @@ class SearchResultRender @Inject constructor() {
 
     private lateinit var recyclerView: RecyclerView
 
+    // DES：recycleView adapter
     fun init(recyclerView: RecyclerView, onItemClick: (String) -> Unit) {
         this.recyclerView = recyclerView
         recyclerView.setup<Any> {
@@ -56,6 +57,7 @@ class SearchResultRender @Inject constructor() {
         }
     }
 
+    // DES：submit dataSource
     fun render(state: SearchState) {
         when (state) {
             is SearchState.Loading -> recyclerView.submitList(mutableListOf(Loading))

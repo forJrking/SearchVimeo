@@ -6,7 +6,7 @@ import kotlinx.coroutines.withContext
 import java.lang.Exception
 
 /**
- * @description:
+ * @description: 数据包装
  * @author: forjrking
  * @date: 2021/10/10 3:19 下午
  */

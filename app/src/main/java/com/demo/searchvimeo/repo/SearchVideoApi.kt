@@ -7,7 +7,7 @@ import retrofit2.http.Query
 
 
 /**
- * @description:
+ * @description:API
  * @author: forjrking
  * @date: 2021/10/10 3:25 下午
  */

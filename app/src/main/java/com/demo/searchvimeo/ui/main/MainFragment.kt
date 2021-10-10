@@ -47,6 +47,7 @@ class MainFragment : Fragment() {
     ): View {
         return MainFragmentBinding.inflate(inflater, container, false).run {
             binding = this
+            ////region ========== init Render ==========
             searchResultRender.init(binding.recyclerView) {
                 Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
                 try {
@@ -61,12 +62,14 @@ class MainFragment : Fragment() {
             searchBarRender.init(binding.searchBar) {
                 viewModel.query(it)
             }
+            //endregion
             root
         }
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
+        // di code
         try {
             mainViewModel.component?.inject(this)
         } catch (e: Exception) {
@@ -76,7 +79,9 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        // lifeData observe
         viewModel.stateLifeData.observe(viewLifecycleOwner) {
+            // dispatcher state
             searchBarRender.render(it)
             searchResultRender.render(it)
         }
