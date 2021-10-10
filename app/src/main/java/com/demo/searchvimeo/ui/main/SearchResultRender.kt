@@ -30,8 +30,10 @@ class SearchResultRender @Inject constructor() {
             adapter {
                 addItem(R.layout.layout_video_item) {
                     isForViewType { data, _ -> data is String }
-                    bindViewHolder { data, _, _ ->
-                        findViewById<ImageView>(R.id.img).load(data)
+                    bindViewHolder { data, pos, _ ->
+                        findViewById<ImageView>(R.id.img).load(( data as String)) {
+                            placeHolderResId = R.drawable.ic_baseline_image_24
+                        }
                     }
                 }
                 addItem(R.layout.layout_loading_item) {
@@ -56,7 +58,7 @@ class SearchResultRender @Inject constructor() {
             is SearchState.Loading -> recyclerView.submitList(mutableListOf(Loading))
             is SearchState.Error -> recyclerView.submitList(mutableListOf(Error))
             is SearchState.Empty -> recyclerView.submitList(mutableListOf(Empty))
-            is SearchState.Data -> recyclerView.submitList(mutableListOf(state.result))
+            is SearchState.Data -> recyclerView.submitList(state.result.toMutableList())
         }
     }
 }

@@ -18,9 +18,14 @@ class ModelReducer @Inject constructor() {
             if (data.isBlank()) {
                 SearchState.Empty
             } else {
-                SearchState.Data(
-                    result = matchList(data)
-                )
+                val resultList = matchList(data)
+                if (resultList.isEmpty()) {
+                    SearchState.Empty
+                } else {
+                    SearchState.Data(
+                        result = resultList
+                    )
+                }
             }
         }
         is Result.Error -> {
@@ -31,26 +36,33 @@ class ModelReducer @Inject constructor() {
 
     companion object {
 
-        private val rowReg = "<div class=\"iris_p_infinite__item span-1\">.*?</div>"
-        private val reg =
-            "<a class=\"iris_video-vital__overlay iris_link-box iris_annotation-box iris_chip-box\".*?</a>"
-        private val regImg = "src=\".*?\""
+        private val rowReg =
+            "<a class=\"item_thumb\" href=\".*?\">\\s+<img src=\".*?\">\\s+<span.*?</a>"
+        private val regImg = "srcset=\"http.*?\\s3x\""
     }
 
     //<div class="iris_video-vital iris_video-vital--browse">
 //    <a class="iris_video-vital__overlay iris_link-box iris_annotation-box iris_chip-box" href="https://vimeo.com/201281043">
 
-    private fun matchList(data: String): List<String> {
-        val matcher = Pattern.compile(rowReg).matcher(data)
-        return mutableListOf<String>().apply {
+    private fun matchList(data: String): List<String> = mutableListOf<String>().apply {
+        val matcher = Pattern.compile(rowReg).matcher(data.trim())
+        try {
             while (matcher.find()) {
                 val group = matcher.group()
                 Log.d("matcher", group)
                 val matcherSrc = Pattern.compile(regImg).matcher(group)
                 while (matcherSrc.find()) {
-                    this.add(matcherSrc.group())
+                    val group1 = matcherSrc.group()
+                    val imgUrl = group1.replace("srcset=\"", "")
+                        .replace("\"", "")
+                        .replace(" 2x", "")
+                        .replace(" 3x", "")
+                        .split(",")[0]
+                    Log.d("matcher1", imgUrl)
+                    this.add(imgUrl)
                 }
             }
+        } catch (e: Exception) {
         }
     }
 

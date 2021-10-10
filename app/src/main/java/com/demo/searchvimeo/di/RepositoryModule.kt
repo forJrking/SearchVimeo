@@ -37,7 +37,7 @@ object RepositoryModule {
 
     @Provides
     fun createOkhttpClient(context: Context) = OkHttpClient.Builder()
-        .addInterceptor(HttpLoggingInterceptor().apply { setLevel(HttpLoggingInterceptor.Level.BODY) })
+        .addInterceptor(HttpLoggingInterceptor().apply { setLevel(HttpLoggingInterceptor.Level.HEADERS) })
         .writeTimeout(15, TimeUnit.SECONDS)
         .readTimeout(15, TimeUnit.SECONDS)
         .readTimeout(10, TimeUnit.SECONDS)
