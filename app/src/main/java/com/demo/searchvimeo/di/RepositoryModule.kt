@@ -1,11 +1,13 @@
-package com.demo.searchvimeo.repo
+package com.demo.searchvimeo.di
 
+import android.content.Context
+import com.demo.searchvimeo.repo.SearchVideoApi
 import dagger.Module
 import dagger.Provides
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import okhttp3.Cache
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 import okhttp3.logging.HttpLoggingInterceptor
 
@@ -22,7 +24,7 @@ import java.util.concurrent.TimeUnit
 object RepositoryModule {
 
     @Provides
-    fun providesDispatcher() = Dispatchers.IO
+    fun providesDispatcher(): CoroutineDispatcher = Dispatchers.IO
 
     @Provides
     @Singleton
@@ -31,18 +33,16 @@ object RepositoryModule {
 //            .addConverterFactory(GsonConverterFactory.create())
             .baseUrl("https://vimeo.com")
             .client(okHttpClient)
-            .build().let {
-                it.create(SearchVideoApi::class.java)
-            }
+            .build().create(SearchVideoApi::class.java)
 
     @Provides
-    fun createOkhttpClient() = OkHttpClient.Builder()
+    fun createOkhttpClient(context: Context) = OkHttpClient.Builder()
         .addInterceptor(HttpLoggingInterceptor().apply { setLevel(HttpLoggingInterceptor.Level.BODY) })
         .writeTimeout(15, TimeUnit.SECONDS)
         .readTimeout(15, TimeUnit.SECONDS)
         .readTimeout(10, TimeUnit.SECONDS)
         .retryOnConnectionFailure(false)
-//        .cache(Cache(cacheDir, cacheSize))
+        .cache(Cache(context.cacheDir, 500 * 1024))
         .build()
 
 }

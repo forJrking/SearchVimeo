@@ -38,7 +38,7 @@ class SearchResultRender @Inject constructor() {
                     isForViewType { data, _ -> data !is String }
                     bindViewHolder { data, _, _ ->
                         when (data) {
-                            is Loading -> setText(R.id.abnormalText, "Loading")
+                            is Loading -> setText(R.id.abnormalText, "")
                             is Empty -> setText(R.id.abnormalText, "Empty")
                             is Error -> setText(R.id.abnormalText, "Error")
                         }

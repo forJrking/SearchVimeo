@@ -1,16 +1,19 @@
 package com.demo.searchvimeo.ui.main
 
 import android.content.Context
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import com.demo.searchvimeo.R
+import androidx.lifecycle.ViewModelProvider
+import com.demo.searchvimeo.MainViewModel
 import com.demo.searchvimeo.databinding.MainFragmentBinding
+import com.demo.searchvimeo.viewmodel.SearchFragmentViewModel
+import javax.inject.Inject
 
 class MainFragment : Fragment() {
 
@@ -18,12 +21,20 @@ class MainFragment : Fragment() {
         fun newInstance() = MainFragment()
     }
 
-    private val viewModel: MainViewModel by viewModels()
+    @Inject
+    lateinit var searchResultRender: SearchResultRender
+
+    @Inject
+    lateinit var searchBarRender: SearchBarRender
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    private val viewModel: SearchFragmentViewModel by viewModels { viewModelFactory }
+    // share data or
+    private val mainViewModel: MainViewModel by activityViewModels()
 
     private lateinit var binding: MainFragmentBinding
-
-    lateinit var searchResultRender: SearchResultRender
-    lateinit var searchBarRender: SearchBarRender
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,8 +42,6 @@ class MainFragment : Fragment() {
     ): View {
         return MainFragmentBinding.inflate(inflater, container, false).run {
             binding = this
-            searchResultRender = SearchResultRender()
-            searchBarRender = SearchBarRender()
             searchResultRender.init(binding.recyclerView) {
                 Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
             }
@@ -45,6 +54,11 @@ class MainFragment : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
+        try {
+            mainViewModel.component?.inject(this)
+        } catch (e: Exception) {
+            requireActivity().finish()
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
