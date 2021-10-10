@@ -31,8 +31,12 @@ class SearchResultRender @Inject constructor() {
                 addItem(R.layout.layout_video_item) {
                     isForViewType { data, _ -> data is String }
                     bindViewHolder { data, pos, _ ->
-                        findViewById<ImageView>(R.id.img).load(( data as String)) {
+                        val imageView = findViewById<ImageView>(R.id.img)
+                        imageView.load(data as? String) {
                             placeHolderResId = R.drawable.ic_baseline_image_24
+                        }
+                        clicked(R.id.img) {
+                            onItemClick.invoke("$pos")
                         }
                     }
                 }

@@ -36,13 +36,10 @@ class ModelReducer @Inject constructor() {
 
     companion object {
 
-        private val rowReg =
+        private const val rowReg =
             "<a class=\"item_thumb\" href=\".*?\">\\s+<img src=\".*?\">\\s+<span.*?</a>"
-        private val regImg = "srcset=\"http.*?\\s3x\""
+        private const val regImg = "srcset=\"http.*?\\s3x\""
     }
-
-    //<div class="iris_video-vital iris_video-vital--browse">
-//    <a class="iris_video-vital__overlay iris_link-box iris_annotation-box iris_chip-box" href="https://vimeo.com/201281043">
 
     private fun matchList(data: String): List<String> = mutableListOf<String>().apply {
         val matcher = Pattern.compile(rowReg).matcher(data.trim())
